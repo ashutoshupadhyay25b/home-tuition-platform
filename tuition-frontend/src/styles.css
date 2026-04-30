@@ -1,0 +1,28 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.register-card, .login-card, .profile-card {
+    max-width: 450px;
+    width: 100%;
+}
+
+.role-selection {
+    margin: 15px 0;
+}
+
+mat-radio-button {
+    margin-right: 20px;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}

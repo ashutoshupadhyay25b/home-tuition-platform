@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <mat-card class="search-card mb-4">
+    <mat-card-title class="mb-3">Find a Tutor</mat-card-title>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-5">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subject</mat-label>
+            <input matInput [(ngModel)]="subject" placeholder="e.g. Mathematics">
+          </mat-form-field>
+        </div>
+        <div class="col-md-5">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Class Level</mat-label>
+            <input matInput [(ngModel)]="classLevel" placeholder="e.g. Class 10">
+          </mat-form-field>
+        </div>
+        <div class="col-md-2 d-flex align-items-center mb-3">
+          <button mat-raised-button color="primary" class="full-width py-2" (click)="onSearch()">
+            <mat-icon>search</mat-icon> Search
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <mat-spinner diameter="50" class="mx-auto"></mat-spinner>
+    <p class="mt-3">Searching for best tutors...</p>
+  </div>
+
+  <div class="row" *ngIf="!loading && tutors.length > 0">
+    <div class="col-md-4 mb-4" *ngFor="let tutor of tutors">
+      <mat-card class="tutor-card h-100">
+        <mat-card-header>
+          <div mat-card-avatar class="tutor-avatar">
+            <mat-icon color="primary" style="transform: scale(2)">account_circle</mat-icon>
+          </div>
+          <mat-card-title>{{ tutor.user.name }}</mat-card-title>
+          <mat-card-subtitle>{{ tutor.subject }} Expert</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="mt-3">
+          <p><strong>Level:</strong> {{ tutor.classLevel }}</p>
+          <p><strong>Location:</strong> {{ tutor.location }}</p>
+          <p><strong>Experience:</strong> {{ tutor.experience }} Years</p>
+          <p><strong>Mode:</strong> <span class="badge badge-info">{{ tutor.teachingMode }}</span></p>
+          <p class="fees text-success"><strong>Fees:</strong> ₹{{ tutor.fees }}/hr</p>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions class="d-flex justify-content-end">
+          <button mat-button color="primary" (click)="requestTutor(tutor.user.id)">
+            <mat-icon>send</mat-icon> REQUEST
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && tutors.length === 0 && subject" class="text-center my-5">
+    <mat-icon style="font-size: 60px; height: 60px; width: 60px; color: #ccc;">sentiment_dissatisfied</mat-icon>
+    <p class="text-muted mt-3">No tutors found for your search. Try different filters.</p>
+  </div>
+</div>
