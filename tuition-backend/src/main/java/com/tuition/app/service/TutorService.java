@@ -7,6 +7,8 @@ import com.tuition.app.repository.TutorProfileRepository;
 import com.tuition.app.repository.UserRepository;
 import com.tuition.app.util.AppMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +29,16 @@ public class TutorService {
         return AppMapper.toTutorProfileDTO(savedProfile);
     }
 
-    public List<TutorProfileDTO> searchTutors(String subject, String classLevel) {
-        List<TutorProfile> profiles = tutorProfileRepository.findBySubjectsContainingIgnoreCaseAndClassLevelContainingIgnoreCase(subject, classLevel);
-        return profiles.stream()
+    public List<TutorProfileDTO> searchTutors(String subjects, String classLevel, String city, Double minPrice, Double maxPrice) {
+        String subjectsParam = (subjects != null && !subjects.isEmpty()) ? subjects : null;
+        String classLevelParam = (classLevel != null && !classLevel.isEmpty()) ? classLevel : null;
+        String cityParam = (city != null && !city.isEmpty()) ? city : null;
+
+        // Default to first 50 results for performance
+        Pageable pageable = PageRequest.of(0, 50);
+
+        return tutorProfileRepository.searchTutors(subjectsParam, classLevelParam, cityParam, minPrice, maxPrice, pageable)
+                .getContent().stream()
                 .map(AppMapper::toTutorProfileDTO)
                 .collect(Collectors.toList());
     }

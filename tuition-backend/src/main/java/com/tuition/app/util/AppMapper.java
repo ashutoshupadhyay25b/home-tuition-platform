@@ -22,6 +22,7 @@ public class AppMapper {
         dto.setUserName(profile.getUser().getName());
         dto.setSubjects(profile.getSubjects());
         dto.setClassLevel(profile.getClassLevel());
+        dto.setCity(profile.getCity());
         dto.setHourlyRate(profile.getHourlyRate());
         dto.setBio(profile.getBio());
         dto.setExperience(profile.getExperience());

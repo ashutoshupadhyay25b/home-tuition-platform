@@ -6,6 +6,7 @@ public class TutorProfileDTO {
     private String userName;
     private String subjects;
     private String classLevel;
+    private String city;
     private Double hourlyRate;
     private String bio;
     private Integer experience;

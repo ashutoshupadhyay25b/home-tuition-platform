@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-tutor-list',
@@ -9,63 +10,66 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TutorListComponent implements OnInit {
   tutors: any[] = [];
-  subject: string = '';
-  classLevel: string = '';
-  currentUser: any;
-  loading: boolean = false;
+  filters = {
+    subjects: '',
+    classLevel: '',
+    city: '',
+    minPrice: null,
+    maxPrice: null
+  };
+  isLoading = false;
+  sortBy = 'rate-low';
 
   constructor(
     private apiService: ApiService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.currentUser = JSON.parse(userStr);
-    }
+    // Pick up filters from URL (from Homepage search)
+    this.route.queryParams.subscribe(params => {
+      if (params['subject']) this.filters.subjects = params['subject'];
+      if (params['classLevel']) this.filters.classLevel = params['classLevel'];
+      if (params['city']) this.filters.city = params['city'];
+      this.search();
+    });
   }
 
-  onSearch() {
-    if (!this.subject || !this.classLevel) {
-      this.snackBar.open('Please enter both subject and class level', 'Close', { duration: 3000 });
-      return;
-    }
-
-    this.loading = true;
-    this.apiService.searchTutors(this.subject, this.classLevel).subscribe({
+  search() {
+    this.isLoading = true;
+    this.apiService.searchTutors(this.filters).subscribe({
       next: (res) => {
         this.tutors = res;
-        this.loading = false;
-        if (this.tutors.length === 0) {
-          this.snackBar.open('No tutors found for your search', 'Close', { duration: 3000 });
-        }
+        this.applySorting();
+        this.isLoading = false;
       },
       error: (err) => {
-        this.loading = false;
-        this.snackBar.open('Error fetching tutors', 'Close', { duration: 3000 });
+        this.isLoading = false;
+        this.snackBar.open('Error searching tutors', 'Close', { duration: 3000 });
       }
     });
   }
 
-  requestTutor(tutorId: number) {
-    if (!this.currentUser) {
-      this.snackBar.open('Please login first to send requests', 'Close', { duration: 3000 });
+  applySorting() {
+    if (this.sortBy === 'rate-low') {
+      this.tutors.sort((a, b) => a.hourlyRate - b.hourlyRate);
+    } else if (this.sortBy === 'rate-high') {
+      this.tutors.sort((a, b) => b.hourlyRate - a.hourlyRate);
+    } else if (this.sortBy === 'experience') {
+      this.tutors.sort((a, b) => b.experience - a.experience);
+    }
+  }
+
+  sendRequest(tutorId: number) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.id) {
+      this.snackBar.open('Please login to send requests', 'Close', { duration: 3000 });
       return;
     }
 
-    if (this.currentUser.id === tutorId) {
-      this.snackBar.open('You cannot request yourself!', 'Close', { duration: 3000 });
-      return;
-    }
-
-    const requestData = {
-      studentId: this.currentUser.id,
-      tutorId: tutorId
-    };
-
-    this.apiService.sendRequest(requestData).subscribe({
-      next: (res) => {
+    this.apiService.sendRequest({ studentId: user.id, tutorId }).subscribe({
+      next: () => {
         this.snackBar.open('Request sent successfully!', 'Close', { duration: 3000 });
       },
       error: (err) => {

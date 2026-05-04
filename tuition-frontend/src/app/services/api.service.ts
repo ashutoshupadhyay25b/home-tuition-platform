@@ -26,8 +26,16 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/tutors/profile?userId=${userId}`, profileData);
   }
 
-  searchTutors(subject: string, classLevel: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/tutors/search?subject=${subject}&classLevel=${classLevel}`);
+  searchTutors(filters: { subjects?: string, classLevel?: string, city?: string, minPrice?: number, maxPrice?: number }): Observable<any> {
+    let params = [];
+    if (filters.subjects) params.push(`subjects=${filters.subjects}`);
+    if (filters.classLevel) params.push(`classLevel=${filters.classLevel}`);
+    if (filters.city) params.push(`city=${filters.city}`);
+    if (filters.minPrice) params.push(`minPrice=${filters.minPrice}`);
+    if (filters.maxPrice) params.push(`maxPrice=${filters.maxPrice}`);
+    
+    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
+    return this.http.get(`${this.baseUrl}/tutors/search${queryString}`);
   }
 
   // --- Request Methods ---

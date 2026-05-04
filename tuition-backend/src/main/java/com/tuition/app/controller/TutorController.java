@@ -22,8 +22,13 @@ public class TutorController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<TutorProfileDTO>> search(@RequestParam String subject, @RequestParam String classLevel) {
-        return ResponseEntity.ok(tutorService.searchTutors(subject, classLevel));
+    public ResponseEntity<List<TutorProfileDTO>> search(
+            @RequestParam(required = false) String subjects,
+            @RequestParam(required = false) String classLevel,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+        return ResponseEntity.ok(tutorService.searchTutors(subjects, classLevel, city, minPrice, maxPrice));
     }
 
     @GetMapping("/profile/{userId}")
