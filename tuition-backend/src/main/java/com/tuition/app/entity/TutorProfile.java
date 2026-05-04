@@ -33,4 +33,8 @@ public class TutorProfile {
     private Integer experience;
     
     private String teachingMode;
+
+    private Double rating;
+    
+    private Integer reviewsCount;
 }

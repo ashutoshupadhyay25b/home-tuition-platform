@@ -1,0 +1,64 @@
+<div class="post-req-page py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <mat-card class="form-card shadow-lg border-0 p-4">
+          <div class="text-center mb-4">
+            <div class="icon-circle bg-primary-light mx-auto mb-3">
+              <mat-icon color="primary">assignment</mat-icon>
+            </div>
+            <h2 class="font-weight-bold mb-1">Post Your Requirement</h2>
+            <p class="text-muted">Tell us what you need, and the best tutors will reach out to you.</p>
+          </div>
+
+          <form [formGroup]="reqForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Subject</mat-label>
+                  <input matInput formControlName="subject" placeholder="e.g. Mathematics">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Class Level</mat-label>
+                  <mat-select formControlName="classLevel">
+                    <mat-option value="Class 10">Class 10</mat-option>
+                    <mat-option value="Class 12">Class 12</mat-option>
+                    <mat-option value="JEE/NEET">JEE/NEET</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city" placeholder="e.g. Ranchi">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Budget (per hour)</mat-label>
+                  <input matInput type="number" formControlName="budget" placeholder="₹">
+                  <span matPrefix>₹&nbsp;</span>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Detailed Description</mat-label>
+              <textarea matInput formControlName="description" rows="4" placeholder="Tell tutors about your specific needs, timing preferences, etc."></textarea>
+              <mat-hint>Minimum 20 characters</mat-hint>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" class="w-100 py-3 mt-4" type="submit" [disabled]="reqForm.invalid || isLoading">
+              {{ isLoading ? 'Posting...' : 'Post Requirement' }}
+            </button>
+          </form>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -11,10 +11,11 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -28,18 +29,18 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.apiService.loginUser(this.loginForm.value).subscribe({
+      this.isLoading = true;
+      this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          localStorage.setItem('user', JSON.stringify(res));
+          this.isLoading = false;
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
           this.snackBar.open('Login Successful!', 'Close', { duration: 3000 });
-          if (res.role === 'TUTOR') {
-            this.router.navigate(['/tutor-profile']);
-          } else {
-            this.router.navigate(['/tutors']);
-          }
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          this.snackBar.open('Invalid Email or Password', 'Close', { duration: 3000 });
+          this.isLoading = false;
+          this.snackBar.open('Invalid email or password', 'Close', { duration: 3000 });
         }
       });
     }

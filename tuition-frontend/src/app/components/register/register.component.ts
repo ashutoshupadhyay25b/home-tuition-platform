@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -15,7 +15,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -32,16 +32,19 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-      this.apiService.registerUser(this.registerForm.value).subscribe({
+      this.authService.register(this.registerForm.value).subscribe({
         next: (res) => {
           this.isLoading = false;
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
           this.snackBar.open('Registration Successful!', 'Close', { duration: 3000 });
-          this.router.navigate(['/login']);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.isLoading = false;
           console.error('Registration error:', err);
-          this.snackBar.open('Registration Failed: ' + (err.error?.message || 'Email already exists or server is waking up. Please try again in 30 seconds.'), 'Close', { duration: 5000 });
+          const errorMsg = err.error?.message || 'Server is waking up or connection lost. Please try again in 30 seconds.';
+          this.snackBar.open('Registration Failed: ' + errorMsg, 'Close', { duration: 5000 });
         }
       });
     }

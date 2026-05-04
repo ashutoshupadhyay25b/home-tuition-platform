@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TutorService } from '../../services/tutor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-tutor-list',
@@ -10,71 +12,108 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TutorListComponent implements OnInit {
   tutors: any[] = [];
-  filters = {
+  cityPageName = '';
+  isLoading = false;
+  
+  // Pagination
+  totalElements = 0;
+  pageSize = 10;
+  currentPage = 0;
+  
+  // Filters
+  filters: any = {
     subjects: '',
     classLevel: '',
     city: '',
-    minPrice: null,
-    maxPrice: null
+    minPrice: 0,
+    maxPrice: 2000
   };
-  isLoading = false;
-  sortBy = 'rate-low';
+
+  // Sorting
+  sortBy = 'id';
+  sortDirection = 'desc';
+
+  subjectsList = ['Maths', 'Physics', 'Chemistry', 'Biology', 'English', 'Computer Science', 'Accounts', 'Economics'];
+  classLevels = ['Class 1-5', 'Class 6-8', 'Class 9-10', 'Class 11-12', 'College/Degree'];
 
   constructor(
-    private apiService: ApiService,
+    private tutorService: TutorService,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: Title,
+    private metaService: Meta
   ) { }
 
   ngOnInit(): void {
-    // Pick up filters from URL (from Homepage search)
+    this.route.params.subscribe(params => {
+      const cityParam = params['city'];
+      if (cityParam) {
+        this.filters.city = cityParam.charAt(0).toUpperCase() + cityParam.slice(1);
+        this.updateSEOMetadata(this.filters.city);
+        this.search();
+      }
+    });
+
     this.route.queryParams.subscribe(params => {
       if (params['subject']) this.filters.subjects = params['subject'];
       if (params['classLevel']) this.filters.classLevel = params['classLevel'];
-      if (params['city']) this.filters.city = params['city'];
+      if (params['city']) {
+        this.filters.city = params['city'];
+        this.updateSEOMetadata(this.filters.city);
+      }
       this.search();
     });
   }
 
+  updateSEOMetadata(city: string) {
+    this.cityPageName = city;
+    const title = `Best Home Tutors in ${city} | Verified Private Teachers`;
+    const description = `Find qualified and verified home tutors in ${city} for all subjects and classes. Compare profiles, ratings, and fees. Book a free demo class today!`;
+    
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
+    this.metaService.updateTag({ property: 'og:title', content: title });
+    this.metaService.updateTag({ property: 'og:description', content: description });
+  }
+
   search() {
     this.isLoading = true;
-    this.apiService.searchTutors(this.filters).subscribe({
+    this.tutorService.search(this.filters, this.currentPage, this.pageSize, this.sortBy, this.sortDirection).subscribe({
       next: (res) => {
-        this.tutors = res;
-        this.applySorting();
+        this.tutors = res.content;
+        this.totalElements = res.totalElements;
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.open('Error searching tutors', 'Close', { duration: 3000 });
+        this.snackBar.open('Error fetching tutors', 'Close', { duration: 3000 });
       }
     });
   }
 
-  applySorting() {
-    if (this.sortBy === 'rate-low') {
-      this.tutors.sort((a, b) => a.hourlyRate - b.hourlyRate);
-    } else if (this.sortBy === 'rate-high') {
-      this.tutors.sort((a, b) => b.hourlyRate - a.hourlyRate);
-    } else if (this.sortBy === 'experience') {
-      this.tutors.sort((a, b) => b.experience - a.experience);
-    }
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.search();
   }
 
-  sendRequest(tutorId: number) {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!user.id) {
-      this.snackBar.open('Please login to send requests', 'Close', { duration: 3000 });
-      return;
-    }
+  applyFilters() {
+    this.currentPage = 0;
+    this.search();
+  }
 
-    this.apiService.sendRequest({ studentId: user.id, tutorId }).subscribe({
-      next: () => {
-        this.snackBar.open('Request sent successfully!', 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        this.snackBar.open('Failed to send request', 'Close', { duration: 3000 });
-      }
-    });
+  onSortChange(event: any) {
+    const val = event.value;
+    if (val === 'low') {
+      this.sortBy = 'hourlyRate';
+      this.sortDirection = 'asc';
+    } else if (val === 'high') {
+      this.sortBy = 'hourlyRate';
+      this.sortDirection = 'desc';
+    } else {
+      this.sortBy = 'id';
+      this.sortDirection = 'desc';
+    }
+    this.search();
   }
 }

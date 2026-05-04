@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
+import { RequestService } from '../../services/request.service';
+import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -12,16 +13,23 @@ export class RequestDashboardComponent implements OnInit {
   currentUser: any;
   loading: boolean = false;
   displayedColumns: string[] = [];
+  
+  stats = {
+    total: 0,
+    pending: 0,
+    accepted: 0,
+    rejected: 0
+  };
 
   constructor(
-    private apiService: ApiService,
+    private requestService: RequestService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.currentUser = JSON.parse(userStr);
+    this.currentUser = this.authService.getCurrentUser();
+    if (this.currentUser) {
       this.loadRequests();
       this.setupColumns();
     }
@@ -29,21 +37,22 @@ export class RequestDashboardComponent implements OnInit {
 
   setupColumns() {
     if (this.currentUser.role === 'STUDENT') {
-      this.displayedColumns = ['tutorName', 'status'];
+      this.displayedColumns = ['tutorName', 'date', 'status'];
     } else {
-      this.displayedColumns = ['studentName', 'status', 'actions'];
+      this.displayedColumns = ['studentName', 'date', 'status', 'actions'];
     }
   }
 
   loadRequests() {
     this.loading = true;
     const obs = this.currentUser.role === 'STUDENT' 
-      ? this.apiService.getRequestsByStudent(this.currentUser.id)
-      : this.apiService.getRequestsByTutor(this.currentUser.id);
+      ? this.requestService.getByStudent(this.currentUser.id)
+      : this.requestService.getByTutor(this.currentUser.id);
 
     obs.subscribe({
       next: (res) => {
         this.requests = res;
+        this.calculateStats();
         this.loading = false;
       },
       error: (err) => {
@@ -53,14 +62,24 @@ export class RequestDashboardComponent implements OnInit {
     });
   }
 
+  calculateStats() {
+    this.stats.total = this.requests.length;
+    this.stats.pending = this.requests.filter(r => r.status === 'PENDING').length;
+    this.stats.accepted = this.requests.filter(r => r.status === 'ACCEPTED').length;
+    this.stats.rejected = this.requests.filter(r => r.status === 'REJECTED').length;
+  }
+
   updateStatus(requestId: number, status: string) {
-    this.apiService.updateRequestStatus(requestId, status).subscribe({
+    this.requestService.updateStatus(requestId, status).subscribe({
       next: (res) => {
-        this.snackBar.open(`Request ${status.toLowerCase()}ed!`, 'Close', { duration: 3000 });
-        this.loadRequests(); // Refresh list
+        this.snackBar.open(`Request ${status.toLowerCase()}ed successfully!`, 'Close', { 
+          duration: 3000,
+          panelClass: status === 'ACCEPTED' ? ['success-snackbar'] : ['error-snackbar']
+        });
+        this.loadRequests();
       },
       error: (err) => {
-        this.snackBar.open('Action failed', 'Close', { duration: 3000 });
+        this.snackBar.open('Action failed. Please try again.', 'Close', { duration: 3000 });
       }
     });
   }

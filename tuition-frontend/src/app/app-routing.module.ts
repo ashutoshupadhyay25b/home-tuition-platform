@@ -9,15 +9,26 @@ import { HomeComponent } from './components/home/home.component';
 
 import { LayoutComponent } from './shared/components/layout/layout.component';
 
+import { TutorDetailComponent } from './components/tutor-detail/tutor-detail.component';
+
+import { AuthGuard } from './guards/auth.guard';
+
+import { LeadListComponent } from './components/lead-list/lead-list.component';
+import { PostRequirementComponent } from './components/post-requirement/post-requirement.component';
+
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       { path: 'tutors', component: TutorListComponent },
-      { path: 'tutor-profile', component: TutorProfileComponent },
-      { path: 'dashboard', component: RequestDashboardComponent },
-      { path: 'profile', component: TutorProfileComponent },
+      { path: 'tutor/:id', component: TutorDetailComponent },
+      { path: 'tutor-profile', component: TutorProfileComponent, canActivate: [AuthGuard] },
+      { path: 'dashboard', component: RequestDashboardComponent, canActivate: [AuthGuard] },
+      { path: 'post-requirement', component: PostRequirementComponent, canActivate: [AuthGuard] },
+      { path: 'leads', component: LeadListComponent, canActivate: [AuthGuard] },
+      { path: 'profile', component: TutorProfileComponent, canActivate: [AuthGuard] },
+      { path: 'home-tuition-:city', component: TutorListComponent },
       { path: '', component: HomeComponent, pathMatch: 'full' }
     ]
   },

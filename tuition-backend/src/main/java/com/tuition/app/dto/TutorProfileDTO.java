@@ -11,6 +11,8 @@ public class TutorProfileDTO {
     private String bio;
     private Integer experience;
     private String teachingMode;
+    private Double rating;
+    private Integer reviewsCount;
 
     // Constructors
     public TutorProfileDTO() {}
@@ -36,4 +38,8 @@ public class TutorProfileDTO {
     public void setExperience(Integer experience) { this.experience = experience; }
     public String getTeachingMode() { return teachingMode; }
     public void setTeachingMode(String teachingMode) { this.teachingMode = teachingMode; }
+    public Double getRating() { return rating; }
+    public void setRating(Double rating) { this.rating = rating; }
+    public Integer getReviewsCount() { return reviewsCount; }
+    public void setReviewsCount(Integer reviewsCount) { this.reviewsCount = reviewsCount; }
 }

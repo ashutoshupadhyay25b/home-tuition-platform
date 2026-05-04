@@ -1,0 +1,151 @@
+<div class="profile-page py-5" *ngIf="!isLoading && tutor">
+  <div class="container">
+    <div class="row">
+      <!-- Main Content -->
+      <div class="col-lg-8">
+        <mat-card class="profile-header-card shadow-sm mb-4 border-0">
+          <div class="d-flex align-items-center mb-4">
+            <div class="tutor-avatar-xl mr-4">{{ tutor.userName[0] }}</div>
+            <div>
+              <h2 class="mb-1 font-weight-bold">{{ tutor.userName }}</h2>
+              <p class="text-primary h5 mb-2">{{ tutor.subjects }} Specialist</p>
+              <div class="d-flex align-items-center text-muted">
+                <mat-icon class="small-icon mr-1">location_on</mat-icon>
+                <span>{{ tutor.city }}, India</span>
+                <span class="mx-2">•</span>
+                <mat-icon class="small-icon mr-1 text-warning">star</mat-icon>
+                <span class="font-weight-bold text-dark">{{ tutor.rating | number:'1.1-1' }}</span>
+                <span class="ml-1">({{ tutor.reviewsCount }} reviews)</span>
+              </div>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div class="mt-4">
+            <h5 class="font-weight-bold mb-3">About Me</h5>
+            <p class="lead-text text-gray">{{ tutor.bio || 'I am a passionate educator with over ' + tutor.experience + ' years of experience in teaching ' + tutor.subjects + '.' }}</p>
+          </div>
+        </mat-card>
+
+        <!-- Details Grid -->
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <mat-card class="detail-card h-100 shadow-sm border-0 p-3">
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-primary-light mr-3">
+                  <mat-icon color="primary">history_edu</mat-icon>
+                </div>
+                <div>
+                  <small class="text-muted d-block">Experience</small>
+                  <span class="font-weight-bold">{{ tutor.experience }} Years</span>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+          <div class="col-md-6 mb-3">
+            <mat-card class="detail-card h-100 shadow-sm border-0 p-3">
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-success-light mr-3">
+                  <mat-icon color="accent">school</mat-icon>
+                </div>
+                <div>
+                  <small class="text-muted d-block">Class Level</small>
+                  <span class="font-weight-bold">{{ tutor.classLevel }}</span>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Write Review -->
+        <mat-card class="review-form-card shadow-sm border-0 mb-4 p-4">
+          <h5 class="font-weight-bold mb-3">Rate your experience</h5>
+          <div class="rating-select mb-3">
+            <button mat-icon-button *ngFor="let star of [1,2,3,4,5]" (click)="newReview.rating = star" [color]="newReview.rating >= star ? 'warn' : ''">
+              <mat-icon>{{ newReview.rating >= star ? 'star' : 'star_border' }}</mat-icon>
+            </button>
+            <span class="ml-2 font-weight-bold">{{ newReview.rating }}/5 Stars</span>
+          </div>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Share your feedback</mat-label>
+            <textarea matInput [(ngModel)]="newReview.comment" rows="3" placeholder="How was your learning experience?"></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" class="px-4 py-2" (click)="submitReview()" [disabled]="isSubmittingReview">
+            {{ isSubmittingReview ? 'Posting...' : 'Post Review' }}
+          </button>
+        </mat-card>
+
+        <!-- Reviews Section -->
+        <mat-card class="reviews-card shadow-sm border-0 mb-4">
+          <mat-card-title class="h5 font-weight-bold mb-4">Student Reviews ({{ reviews.length }})</mat-card-title>
+          
+          <div *ngIf="reviews.length === 0" class="text-center py-4">
+            <p class="text-muted">No reviews yet. Be the first to rate!</p>
+          </div>
+
+          <div class="review-item mb-4 pb-3 border-bottom" *ngFor="let review of reviews">
+            <div class="d-flex justify-content-between mb-2">
+              <div class="d-flex align-items-center">
+                <div class="avatar-sm mr-2">{{ review.studentName[0] }}</div>
+                <span class="font-weight-bold">{{ review.studentName }}</span>
+              </div>
+              <div class="text-warning">
+                <mat-icon class="small-icon" *ngFor="let i of [1,2,3,4,5]">
+                  {{ review.rating >= i ? 'star' : 'star_border' }}
+                </mat-icon>
+              </div>
+            </div>
+            <p class="text-gray small">{{ review.comment }}</p>
+            <small class="text-muted">{{ review.createdAt | date:'mediumDate' }}</small>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <mat-card class="booking-card shadow-lg border-0 sticky-top-card">
+          <div class="price-tag mb-4">
+            <span class="h2 font-weight-bold">₹{{ tutor.hourlyRate }}</span>
+            <span class="text-muted"> / hour</span>
+          </div>
+          
+          <ul class="list-unstyled mb-4">
+            <li class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Teaching Mode</span>
+              <span class="font-weight-bold">{{ tutor.teachingMode }}</span>
+            </li>
+            <li class="d-flex justify-content-between mb-2">
+              <span class="text-muted">City</span>
+              <span class="font-weight-bold text-success">{{ tutor.city }}</span>
+            </li>
+          </ul>
+
+          <button mat-raised-button color="primary" class="w-100 py-3 mb-3" (click)="sendRequest()">
+            <mat-icon class="mr-2">send</mat-icon> Request Tutor
+          </button>
+          
+          <p class="text-center small text-muted mb-0">Verified Professional Tutor</p>
+        </mat-card>
+
+        <div class="related-tutors mt-4">
+          <h6 class="font-weight-bold mb-3">Tutors like {{ tutor.userName }}</h6>
+          <mat-card *ngFor="let rt of relatedTutors" class="rt-card mb-2 shadow-sm border-0 p-2" [routerLink]="['/tutor', rt.id]">
+            <div class="d-flex align-items-center">
+              <div class="avatar-sm mr-2">{{ rt.userName[0] }}</div>
+              <div>
+                <div class="font-weight-bold small">{{ rt.userName }}</div>
+                <div class="text-muted smaller">₹{{ rt.hourlyRate }}/hr • {{ rt.rating }} ★</div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-container text-center py-5" *ngIf="isLoading">
+  <mat-spinner diameter="50" class="mx-auto"></mat-spinner>
+  <p class="mt-3">Loading tutor profile...</p>
+</div>

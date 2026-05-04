@@ -10,14 +10,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { TutorListComponent } from '../../components/tutor-list/tutor-list.component';
 import { TutorProfileComponent } from '../../components/tutor-profile/tutor-profile.component';
+import { TutorDetailComponent } from '../../components/tutor-detail/tutor-detail.component';
+import { LeadListComponent } from '../../components/lead-list/lead-list.component';
 
 @NgModule({
   declarations: [
     TutorListComponent,
-    TutorProfileComponent
+    TutorProfileComponent,
+    TutorDetailComponent,
+    LeadListComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +39,11 @@ import { TutorProfileComponent } from '../../components/tutor-profile/tutor-prof
     MatSelectModule,
     MatIconModule,
     MatChipsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatSliderModule
   ]
 })
 export class TutorModule { }

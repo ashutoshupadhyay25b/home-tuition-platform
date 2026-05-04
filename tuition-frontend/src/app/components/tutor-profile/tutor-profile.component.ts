@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { TutorService } from '../../services/tutor.service';
+import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -32,7 +33,8 @@ export class TutorProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
+    private tutorService: TutorService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -47,17 +49,15 @@ export class TutorProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.currentUser = JSON.parse(userStr);
-    } else {
+    this.currentUser = this.authService.getCurrentUser();
+    if (!this.currentUser) {
       this.router.navigate(['/login']);
     }
   }
 
   upgradeAccount() {
     if (this.currentUser) {
-      this.apiService.updateUserRole(this.currentUser.id, 'TUTOR').subscribe({
+      this.authService.updateRole(this.currentUser.id, 'TUTOR').subscribe({
         next: (res) => {
           this.currentUser.role = 'TUTOR';
           localStorage.setItem('user', JSON.stringify(this.currentUser));
@@ -76,7 +76,7 @@ export class TutorProfileComponent implements OnInit {
         this.snackBar.open('Please upgrade your account to Tutor first.', 'Close', { duration: 5000 });
         return;
       }
-      this.apiService.createTutorProfile(this.currentUser.id, this.profileForm.value).subscribe({
+      this.tutorService.createProfile(this.currentUser.id, this.profileForm.value).subscribe({
         next: (res) => {
           this.snackBar.open('Professional Profile Saved Successfully!', 'Close', { 
             duration: 5000

@@ -1,0 +1,58 @@
+<div class="leads-page py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="font-weight-bold mb-1">Tuition Leads</h2>
+        <p class="text-muted">Browse active requirements from students in your area</p>
+      </div>
+      <button mat-button color="primary" (click)="loadLeads()">
+        <mat-icon class="mr-1">refresh</mat-icon> Refresh Leads
+      </button>
+    </div>
+
+    <div class="row" *ngIf="!isLoading">
+      <div class="col-md-6 col-lg-4 mb-4" *ngFor="let lead of leads">
+        <mat-card class="lead-card h-100 shadow-sm border-0">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge badge-primary px-3 py-2 rounded-pill">{{ lead.subject }}</span>
+            <span class="text-success font-weight-bold">₹{{ lead.budget }}/hr</span>
+          </div>
+          
+          <h5 class="font-weight-bold mb-2">{{ lead.classLevel }}</h5>
+          <div class="d-flex align-items-center text-muted small mb-3">
+            <mat-icon class="small-icon mr-1">location_on</mat-icon>
+            <span>{{ lead.city }}</span>
+            <span class="mx-2">•</span>
+            <mat-icon class="small-icon mr-1">schedule</mat-icon>
+            <span>{{ lead.createdAt | date:'shortDate' }}</span>
+          </div>
+
+          <p class="description-text text-gray mb-4">{{ lead.description }}</p>
+
+          <mat-divider class="mb-3"></mat-divider>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="student-info d-flex align-items-center">
+              <div class="avatar-xs mr-2">{{ lead.studentName[0] }}</div>
+              <span class="small font-weight-bold">{{ lead.studentName }}</span>
+            </div>
+            <button mat-raised-button color="primary" (click)="respondToLead(lead.id)">Interested</button>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="text-center py-5" *ngIf="!isLoading && leads.length === 0">
+      <mat-icon class="large-icon text-muted mb-3">find_in_page</mat-icon>
+      <h5 class="text-muted">No active leads found right now.</h5>
+      <p class="text-muted small">Check back later for new opportunities!</p>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+      <p class="mt-3 text-primary">Searching for new leads...</p>
+    </div>
+  </div>
+</div>

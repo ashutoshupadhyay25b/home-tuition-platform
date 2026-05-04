@@ -27,6 +27,12 @@
         <li class="nav-item" *ngIf="isLoggedIn">
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
         </li>
+        <li class="nav-item" *ngIf="isLoggedIn && userRole === 'STUDENT'">
+          <a class="nav-link" routerLink="/post-requirement" routerLinkActive="active">Post Lead</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn && userRole === 'TUTOR'">
+          <a class="nav-link" routerLink="/leads" routerLinkActive="active">Browse Leads</a>
+        </li>
         
         <!-- Auth Buttons -->
         <li class="nav-item ml-lg-3" *ngIf="!isLoggedIn">
