@@ -1,0 +1,115 @@
+.hero-section {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.hero-text h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  color: #2d3436;
+}
+
+.hero-img {
+  border-radius: 20px;
+}
+
+.search-card {
+  background: white;
+  border-radius: 16px;
+  margin-top: 40px;
+}
+
+.no-subscript ::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+.section-padding {
+  padding: 80px 0;
+}
+
+.section-title {
+  font-weight: 800;
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+}
+
+.subject-card {
+  background: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.subject-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+.subject-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: #3f51b5;
+}
+
+.step-icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.step-icon-container mat-icon {
+  font-size: 35px;
+  height: 35px;
+  width: 35px;
+}
+
+.bg-primary-light { background-color: rgba(63, 81, 181, 0.1); }
+.bg-success-light { background-color: rgba(76, 175, 80, 0.1); }
+.bg-info-light { background-color: rgba(0, 188, 212, 0.1); }
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  position: relative;
+}
+
+.quote-icon {
+  font-size: 60px;
+  height: 60px;
+  width: 60px;
+  opacity: 0.2;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  background: white;
+  color: #3f51b5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.text-light-gray {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 991px) {
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+  .hero-section {
+    padding: 60px 0;
+    text-align: center;
+  }
+}

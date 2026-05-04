@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './modules/auth/auth.module';
 import { TutorModule } from './modules/tutor/tutor.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { HomeModule } from './modules/home/home.module';
 
 // Angular Material (Core UI)
 import { MatMenuModule } from '@angular/material/menu';
@@ -37,6 +38,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     AuthModule,
     TutorModule,
     DashboardModule,
+    HomeModule,
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
