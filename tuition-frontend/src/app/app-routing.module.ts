@@ -6,13 +6,22 @@ import { TutorListComponent } from './components/tutor-list/tutor-list.component
 import { TutorProfileComponent } from './components/tutor-profile/tutor-profile.component';
 import { RequestDashboardComponent } from './components/request-dashboard/request-dashboard.component';
 
+import { LayoutComponent } from './shared/components/layout/layout.component';
+
 const routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: 'tutors', component: TutorListComponent },
+      { path: 'tutor-profile', component: TutorProfileComponent },
+      { path: 'dashboard', component: RequestDashboardComponent },
+      { path: 'profile', component: TutorProfileComponent },
+      { path: '', redirectTo: '/tutors', pathMatch: 'full' }
+    ]
+  },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'tutors', component: TutorListComponent },
-  { path: 'tutor-profile', component: TutorProfileComponent },
-  { path: 'dashboard', component: RequestDashboardComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'register', component: RegisterComponent }
 ];
 
 @NgModule({

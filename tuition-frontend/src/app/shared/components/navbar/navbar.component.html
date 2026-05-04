@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <mat-icon class="brand-icon mr-2">school</mat-icon>
+      <span class="brand-text">HomeTuition</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"><mat-icon>menu</mat-icon></span>
+    </button>
+
+    <!-- Search & Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="mx-auto search-container d-none d-lg-block">
+        <div class="search-box">
+          <mat-icon matPrefix>search</mat-icon>
+          <input type="text" placeholder="Search tutors or subjects...">
+        </div>
+      </div>
+
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/tutors" routerLinkActive="active">Find Tutors</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        </li>
+        
+        <!-- Auth Buttons -->
+        <li class="nav-item ml-lg-3" *ngIf="!isLoggedIn">
+          <button mat-button routerLink="/login" class="px-3">Login</button>
+        </li>
+        <li class="nav-item ml-lg-2" *ngIf="!isLoggedIn">
+          <button mat-raised-button color="primary" routerLink="/register" class="signup-btn shadow-sm">Sign Up Free</button>
+        </li>
+
+        <!-- User Profile Dropdown -->
+        <li class="nav-item ml-lg-3" *ngIf="isLoggedIn">
+          <button mat-button [matMenuTriggerFor]="profileMenu" class="user-profile">
+            <mat-icon class="mr-1">account_circle</mat-icon>
+            {{ userName }}
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #profileMenu="matMenu" xPosition="before">
+            <button mat-menu-item routerLink="/profile">
+              <mat-icon>person</mat-icon>
+              <span>My Profile</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

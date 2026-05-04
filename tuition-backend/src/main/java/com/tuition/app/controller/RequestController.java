@@ -1,15 +1,14 @@
 package com.tuition.app.controller;
 
-import com.tuition.app.entity.Request;
+import com.tuition.app.dto.RequestDTO;
 import com.tuition.app.entity.RequestStatus;
 import com.tuition.app.service.RequestService;
-import com.tuition.app.repository.RequestRepository;
-import com.tuition.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -17,35 +16,24 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
-    private final RequestRepository requestRepository;
-    private final UserRepository userRepository;
-
-    public record CreateRequestDto(Long studentId, Long tutorId) {}
-    public record UpdateStatusDto(RequestStatus status) {}
 
     @PostMapping
-    public ResponseEntity<Request> createRequest(@RequestBody CreateRequestDto dto) {
-        return ResponseEntity.ok(requestService.createRequest(dto.studentId(), dto.tutorId()));
+    public ResponseEntity<RequestDTO> createRequest(@RequestBody Map<String, Long> body) {
+        return ResponseEntity.ok(requestService.createRequest(body.get("studentId"), body.get("tutorId")));
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<Request>> getRequestsByStudent(@PathVariable Long studentId) {
-        return userRepository.findById(studentId)
-                .map(requestRepository::findByStudent)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<RequestDTO>> getStudentRequests(@PathVariable Long studentId) {
+        return ResponseEntity.ok(requestService.getRequestsByStudent(studentId));
     }
 
     @GetMapping("/tutor/{tutorId}")
-    public ResponseEntity<List<Request>> getRequestsByTutor(@PathVariable Long tutorId) {
-        return userRepository.findById(tutorId)
-                .map(requestRepository::findByTutor)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<RequestDTO>> getTutorRequests(@PathVariable Long tutorId) {
+        return ResponseEntity.ok(requestService.getRequestsByTutor(tutorId));
     }
 
     @PutMapping("/{requestId}/status")
-    public ResponseEntity<Request> updateStatus(@PathVariable Long requestId, @RequestBody UpdateStatusDto dto) {
-        return ResponseEntity.ok(requestService.updateRequestStatus(requestId, dto.status()));
+    public ResponseEntity<RequestDTO> updateStatus(@PathVariable Long requestId, @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(requestService.updateStatus(requestId, RequestStatus.valueOf(body.get("status"))));
     }
 }

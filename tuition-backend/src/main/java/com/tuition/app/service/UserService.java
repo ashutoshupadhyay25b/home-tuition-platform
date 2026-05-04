@@ -1,8 +1,10 @@
 package com.tuition.app.service;
 
+import com.tuition.app.dto.UserDTO;
 import com.tuition.app.entity.Role;
 import com.tuition.app.entity.User;
 import com.tuition.app.repository.UserRepository;
+import com.tuition.app.util.AppMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +14,28 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User registerUser(User user) {
+    public UserDTO registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("User with this email already exists!");
         }
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return AppMapper.toUserDTO(savedUser);
     }
 
-    public User loginUser(String email, String password) {
+    public UserDTO loginUser(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("Invalid credentials");
         }
-        return user;
+        return AppMapper.toUserDTO(user);
     }
 
-    public User updateRole(Long userId, Role role) {
+    public UserDTO updateRole(Long userId, Role role) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setRole(role);
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        return AppMapper.toUserDTO(updatedUser);
     }
 }

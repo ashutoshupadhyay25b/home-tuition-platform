@@ -1,0 +1,93 @@
+.navbar {
+  background: white;
+  padding: 0.8rem 0;
+  transition: all 0.3s ease;
+}
+
+.brand-icon {
+  color: #3f51b5;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  color: #2d3436;
+}
+
+.search-container {
+  width: 40%;
+}
+
+.search-box {
+  background: #f1f3f5;
+  border-radius: 12px;
+  padding: 6px 15px;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  background: white;
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.search-box mat-icon {
+  color: #b2bec3;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #636e72;
+  margin: 0 10px;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #3f51b5;
+}
+
+.signup-btn {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0 20px;
+}
+
+.user-profile {
+  font-weight: 500;
+  border-radius: 10px;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav {
+    padding-top: 1rem;
+    align-items: flex-start !important;
+  }
+  .nav-item {
+    margin: 5px 0;
+    width: 100%;
+  }
+  .nav-link {
+    margin: 0;
+  }
+  .signup-btn {
+    width: 100%;
+  }
+}

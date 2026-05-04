@@ -1,5 +1,6 @@
 package com.tuition.app.controller;
 
+import com.tuition.app.dto.UserDTO;
 import com.tuition.app.entity.Role;
 import com.tuition.app.entity.User;
 import com.tuition.app.service.UserService;
@@ -17,17 +18,17 @@ public class AuthController {
     public record LoginRequest(String email, String password) {}
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<UserDTO> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.loginUser(request.email(), request.password()));
     }
 
     @PutMapping("/role/{userId}")
-    public ResponseEntity<User> updateRole(@PathVariable Long userId, @RequestParam Role role) {
+    public ResponseEntity<UserDTO> updateRole(@PathVariable Long userId, @RequestParam Role role) {
         return ResponseEntity.ok(userService.updateRole(userId, role));
     }
 }

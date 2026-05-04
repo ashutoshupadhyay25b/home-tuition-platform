@@ -1,13 +1,1 @@
-<mat-toolbar color="primary" class="main-navbar">
-  <span>Home Tuition Platform</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/tutors" *ngIf="isLoggedIn()">Find Tutors</button>
-  <button mat-button routerLink="/dashboard" *ngIf="isLoggedIn()">Dashboard</button>
-  <button mat-button routerLink="/login" *ngIf="!isLoggedIn()">Login</button>
-  <button mat-button routerLink="/register" *ngIf="!isLoggedIn()">Register</button>
-  <button mat-button (click)="logout()" *ngIf="isLoggedIn()">Logout</button>
-</mat-toolbar>
-
-<div class="container mt-4">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>
