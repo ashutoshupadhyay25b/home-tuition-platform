@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,13 +31,17 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.valid) {
+      this.isLoading = true;
       this.apiService.registerUser(this.registerForm.value).subscribe({
         next: (res) => {
+          this.isLoading = false;
           this.snackBar.open('Registration Successful!', 'Close', { duration: 3000 });
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          this.snackBar.open('Registration Failed: ' + (err.error?.message || 'Email already exists'), 'Close', { duration: 3000 });
+          this.isLoading = false;
+          console.error('Registration error:', err);
+          this.snackBar.open('Registration Failed: ' + (err.error?.message || 'Email already exists or server is waking up. Please try again in 30 seconds.'), 'Close', { duration: 5000 });
         }
       });
     }

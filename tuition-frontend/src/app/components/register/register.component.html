@@ -31,8 +31,8 @@
           </mat-radio-group>
         </div>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid" class="full-width mt-3">
-          Register
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading" class="full-width mt-3">
+          {{ isLoading ? 'Processing... (Waking up server)' : 'Register' }}
         </button>
       </form>
     </mat-card-content>
