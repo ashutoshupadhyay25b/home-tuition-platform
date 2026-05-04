@@ -26,6 +26,8 @@ public class TutorProfileDTO {
     public void setSubjects(String subjects) { this.subjects = subjects; }
     public String getClassLevel() { return classLevel; }
     public void setClassLevel(String classLevel) { this.classLevel = classLevel; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
     public Double getHourlyRate() { return hourlyRate; }
     public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
     public String getBio() { return bio; }
