@@ -2,6 +2,7 @@ package com.tuition.app.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "requests")
@@ -25,4 +26,6 @@ public class Request {
     
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+
+    private LocalDateTime createdAt;
 }

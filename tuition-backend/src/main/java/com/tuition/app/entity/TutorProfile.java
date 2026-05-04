@@ -19,13 +19,14 @@ public class TutorProfile {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    private String subject;
+    private String subjects;
     
     private String classLevel;
     
-    private Double fees;
+    private Double hourlyRate;
     
-    private String location;
+    @Column(columnDefinition = "TEXT")
+    private String bio;
     
     private Integer experience;
     
